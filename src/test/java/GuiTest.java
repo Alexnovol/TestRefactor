@@ -1,8 +1,5 @@
-import asserts.Gui;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementNotFound;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import pages.BasketPage;
@@ -16,10 +13,10 @@ import java.util.List;
 import static asserts.Gui.shouldBeEquals;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
+
 public class GuiTest {
 
     private MainPage mainPage = new MainPage();
-    private CatalogPage catalogPage = new CatalogPage();
 
     private final String LINK = "https://www.wildberries.ru/";
 
@@ -45,17 +42,12 @@ public class GuiTest {
 
         mainPage.waitingLoadFirstProduct();
 
-        mainPage.findProduct("Iphone 13");
+        CatalogPage catalogPage = mainPage.findProduct("Iphone 13");
 
-        catalogPage.getTitleResults().shouldHave(text("По запросу Iphone 13 найдено"));
+        catalogPage.checkSearchResults("По запросу Iphone 13 найдено", "iphone 13",
+                "По популярности", "Apple");
 
-        catalogPage.getFirstFilter().shouldHave(text("iphone 13"));
-
-        catalogPage.getSecondFilter().shouldHave(text("По популярности"));
-
-        catalogPage.getBrandFirstProduct().shouldHave(text("Apple"));
-
-        catalogPage.clearInputField();
+        catalogPage.clearSearchField();
 
         mainPage.getSearchField().shouldHave(value(""));
 
@@ -65,32 +57,28 @@ public class GuiTest {
     @DisplayName("Смена города")
     public void changeCity() {
 
-        GeoPage geoPage = new GeoPage();
-
         open(LINK);
 
         mainPage.waitingLoadFirstProduct();
 
-        mainPage.clickButtonChangeCity();
+        GeoPage geoPage = mainPage.clickButtonChangeCity();
 
-        geoPage.enterCity("Санкт-Петербург");
+        String city = "Санкт-Петербург";
 
-        geoPage.clickButtonFind();
+        geoPage.enterCity(city);
 
-        geoPage.waitingLoadAnyDeliveryPoint();
+        geoPage.waitingLoadAnyDeliveryPoint(city);
 
         String firstAddress = geoPage.getFirstAddress();
 
         geoPage.clickFirstAddress();
 
-        geoPage.getInfoDeliveryPoint().shouldBe(visible);
-
-        geoPage.getAddressDeliveryPoint().shouldHave(text(firstAddress));
+        geoPage.checkInfoDeliveryPoint(visible);
+        geoPage.checkAddressDeliveryPoint(firstAddress);
 
         geoPage.clickButtonSelectDeliveryPoint();
 
-        geoPage.getInfoDeliveryPoint().shouldNotBe(visible);
-
+        geoPage.checkInfoDeliveryPoint(disappear);
         mainPage.getButtonChangeCity().shouldHave(text(firstAddress));
     }
 
@@ -104,49 +92,28 @@ public class GuiTest {
 
         mainPage.clickButtonFilters();
 
-        mainPage.hoverToCategoryMenu();
-
         mainPage.hoverToHouseAppliances();
 
         mainPage.clickAppliancesForHouse();
 
         mainPage.clickHooversAndSteamCleaners();
 
-        mainPage.clickRobotHoovers();
+        CatalogPage catalogPage = mainPage.clickRobotHoovers();
 
-        catalogPage.getCatalogTitle().shouldHave(text(mainPage.getRobotHoovers().text()));
-
-        List<String> actualFilters = catalogPage.getFilters();
         List<String> expectedFilters = Arrays.asList("Главная", "Бытовая техника", "Техника для дома",
                 "Пылесосы и пароочистители", "Роботы-пылесосы");
-
-        shouldBeEquals(expectedFilters, actualFilters);
+        catalogPage.checkCatalogTitleAndFilters("Роботы-пылесосы", expectedFilters);
 
         String firstProductName = catalogPage.getNameFirstProduct();
         String firstProductPrice = catalogPage.getPriceFirstProduct();
 
         catalogPage.clickButtonInBasket();
 
-        catalogPage.getCountProductsBasket().shouldHave(text("1"));
+        catalogPage.checkCountProductsBasket("1");
 
-        catalogPage.clickButtonBasket();
+        BasketPage basketPage = catalogPage.clickButtonBasket();
 
-        Selenide.sleep(1000);
-
-        BasketPage basketPage = new BasketPage();
-
-        /*
-        На некоторых товарах, проверка ниже не проходит, потому что в случае с товарами некоторых брендов,
-        при добавлении товара в корзину, в название товара в корзине добавляется еще и название бренда, при условии,
-        что в каталоге товаров, в названии, бренда нет. Не со всеми брендами это происходит, я пока
-        только с Okami с таким столкнулся
-         */
-        basketPage.getNameProduct().shouldHave(text(firstProductName));
-        basketPage.getPriceProduct().shouldHave(text(firstProductPrice));
-
-        basketPage.getPriceTotal().shouldHave(text(firstProductPrice));
-
-        basketPage.getButtonOrder().shouldBe(enabled);
+        basketPage.checkDataInBasket(firstProductName, firstProductPrice);
 
     }
 
@@ -160,38 +127,27 @@ public class GuiTest {
 
         mainPage.clickButtonFilters();
 
-        mainPage.hoverToCategoryMenu();
-
         mainPage.hoverToElectronics();
 
         mainPage.clickLaptopsAndComputers();
 
-        mainPage.clickLaptops();
+        CatalogPage catalogPage = mainPage.clickLaptops();
 
         catalogPage.clickButtonAllFilters();
 
         String priceFrom = "100 000";
         String priceTo = "149 000";
-        catalogPage.enterPriceFrom(priceFrom);
-        catalogPage.enterPriceTo(priceTo);
-
+        catalogPage.enterPrice(priceFrom, priceTo);
         String brandText = catalogPage.getFilterBrandText();
         String diagonalText = catalogPage.getFilterDiagonalText();
-
-        catalogPage.clickFilterBrand();
-        catalogPage.clickFilterDiagonal();
-
-        Selenide.sleep(2000);
+        catalogPage.clickFilterBrandAndDiagonal();
 
         String countGoodsInFilters = catalogPage.getCountFilteredGoodsInFilters();
 
         catalogPage.clickButtonShowing();
 
         shouldBeEquals(countGoodsInFilters, catalogPage.getCountFilteredGoodsOnPage());
-        catalogPage.getSelectedFilterBrand().shouldHave(text(brandText));
-        catalogPage.getSelectedFilterPrice().shouldHave(text(String.format("от %s до %s", priceFrom, priceTo)));
-        catalogPage.getSelectedFilterDiagonal().shouldHave(text(diagonalText));
-        catalogPage.getButtonReset().shouldBe(enabled);
+        catalogPage.checkSelectedFiltersAndButtonReset(brandText, diagonalText, priceFrom, priceTo);
 
     }
 

@@ -1,6 +1,7 @@
 package pages;
 
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebElementCondition;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
@@ -11,7 +12,7 @@ public class GeoPage {
 
     private final static String XPATH_BUTTON_FIND = "//*[@class='ymaps-2-1-79-searchbox-button ymaps-2-1-79-_pin_right ymaps-2-1-79-user-selection-none']/ymaps";
 
-    private final static String XPATH_ANY_DELIVERY_POINT = "//*[@id='pooList']//*[contains(text(), 'Санкт-Петербург')]";
+    private final static String XPATH_ANY_DELIVERY_POINT = "//*[@id='pooList']//*[contains(text(), 'city')]";
 
     private final static String XPATH_FIRST_DELIVERY_POINT = "//*[@id='pooList']/div[1]";
 
@@ -28,17 +29,13 @@ public class GeoPage {
         SelenideElement searchField = $x(XPATH_ADDRESS_ENTRY);
         searchField.click();
         searchField.setValue(city);
-
-    }
-
-    public void clickButtonFind() {
-
         $x(XPATH_BUTTON_FIND).click();
+
     }
 
-    public void waitingLoadAnyDeliveryPoint() {
+    public void waitingLoadAnyDeliveryPoint(String city) {
 
-        $x(XPATH_ANY_DELIVERY_POINT).shouldBe(visible);
+        $x(XPATH_ANY_DELIVERY_POINT.replace("city", city)).shouldBe(visible);
 
     }
 
@@ -54,19 +51,17 @@ public class GeoPage {
 
     }
 
-    public SelenideElement getInfoDeliveryPoint() {
-
-        return $(CLASS_INFO_DELIVERY_POINT);
-    }
-
     public void clickButtonSelectDeliveryPoint() {
 
         $(CSS_BUTTON_SELECT_DELIVERY_POINT).click();
 
     }
 
-    public SelenideElement getAddressDeliveryPoint() {
+    public void checkInfoDeliveryPoint(WebElementCondition condition) {
+        $(CLASS_INFO_DELIVERY_POINT).shouldBe(condition);
+    }
 
-        return $(CLASS_ADDRESS_DELIVERY_POINT);
+    public void checkAddressDeliveryPoint(String expAddress) {
+        $(CLASS_ADDRESS_DELIVERY_POINT).shouldHave(text(expAddress));
     }
 }

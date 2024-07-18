@@ -1,11 +1,10 @@
 package elements;
 
-import com.codeborne.selenide.HoverOptions;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementNotFound;
-import org.openqa.selenium.NoSuchElementException;
+import pages.CatalogPage;
 
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Condition.*;
 
 public class CategoryMenu {
 
@@ -26,7 +25,7 @@ public class CategoryMenu {
     public void hoverToHouseAppliances() {
         SelenideElement houseAppliances = $(CSS_HOUSE_APPLIANCES);
         houseAppliances.scrollTo();
-        houseAppliances.hover();
+        houseAppliances.shouldBe(enabled).hover();
     }
 
     public void clickAppliancesForHouse() {
@@ -37,26 +36,23 @@ public class CategoryMenu {
         $x(XPATH_CATEGORY_HOOVERS_AND_STEAM_CLEANERS).click();
     }
 
-    public SelenideElement getRobotHoovers() {
-
-        return $x(XPATH_CATEGORY_ROBOT_HOOVERS);
-
-    }
-
-    public void clickRobotHoovers() {
-        getRobotHoovers().click();
+    public CatalogPage clickRobotHoovers() {
+        $x(XPATH_CATEGORY_ROBOT_HOOVERS).click();
+        return new CatalogPage();
     }
 
     public void hoverToElectronics() {
-        $x(XPATH_ELECTRONICS_CATEGORY).hover();
+        $x(XPATH_ELECTRONICS_CATEGORY).shouldBe(enabled).scrollTo().hover();
     }
 
     public void clickLaptopsAndComputers() {
         $x(XPATH_LAPTOPS_AND_COMPUTERS_CATEGORY).click();
     }
 
-    public void clickLaptops() {
+    public CatalogPage clickLaptops() {
         $x(XPATH_LAPTOPS_CATEGORY).click();
+
+        return new CatalogPage();
     }
 
 

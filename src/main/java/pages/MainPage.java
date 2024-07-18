@@ -6,6 +6,7 @@ import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+
 public class MainPage {
 
     private final static String XPATH_FIRST_PRODUCT = "//*[@class='main-page__content']//article[1]";
@@ -29,12 +30,14 @@ public class MainPage {
         return $(ID_SEARCH_FIELD);
     }
 
-    public void findProduct(String product) {
+    public CatalogPage findProduct(String product) {
 
         SelenideElement searchInput = getSearchField();
         searchInput.click();
         searchInput.setValue(product);
         searchInput.sendKeys(Keys.ENTER);
+
+        return new CatalogPage();
     }
 
     public SelenideElement getButtonChangeCity() {
@@ -44,19 +47,16 @@ public class MainPage {
     }
 
 
-    public void clickButtonChangeCity() {
+    public GeoPage clickButtonChangeCity() {
 
         getButtonChangeCity().click();
 
+        return new GeoPage();
     }
 
     public void clickButtonFilters() {
 
         $(CSS_BUTTON_FILTERS).click();
-
-    }
-
-    public void hoverToCategoryMenu() {
 
         $(CSS_CATEGORY_MENU).hover();
 
@@ -74,14 +74,8 @@ public class MainPage {
         categoryMenu.clickHooversAndSteamCleaners();
     }
 
-    public SelenideElement getRobotHoovers() {
-
-        return categoryMenu.getRobotHoovers();
-
-    }
-
-    public void clickRobotHoovers() {
-        categoryMenu.clickRobotHoovers();
+    public CatalogPage clickRobotHoovers() {
+        return categoryMenu.clickRobotHoovers();
     }
 
     public void hoverToElectronics() {
@@ -92,8 +86,8 @@ public class MainPage {
         categoryMenu.clickLaptopsAndComputers();
     }
 
-    public void clickLaptops() {
-        categoryMenu.clickLaptops();
+    public CatalogPage clickLaptops() {
+        return categoryMenu.clickLaptops();
     }
 
 

@@ -1,7 +1,7 @@
 package pages;
 
 import static com.codeborne.selenide.Selenide.*;
-import com.codeborne.selenide.SelenideElement;
+import static com.codeborne.selenide.Condition.*;
 
 public class BasketPage {
 
@@ -13,28 +13,12 @@ public class BasketPage {
 
     public final static String CSS_ORDER_BUTTON = ".b-btn-do-order.btn-main.j-btn-confirm-order";
 
+    public void checkDataInBasket(String expNameProduct, String expPriceProduct) {
 
-    public SelenideElement getNameProduct() {
-
-        return $(CLASS_NAME_PRODUCT);
-
-    }
-
-    public SelenideElement getPriceProduct() {
-
-        return $(CLASS_PRICE_PRODUCT);
-
-    }
-
-    public SelenideElement getPriceTotal() {
-
-        return $x(XPATH_PRICE_TOTAL);
-
-    }
-
-    public SelenideElement getButtonOrder() {
-
-        return $(CSS_ORDER_BUTTON);
+        $(CLASS_NAME_PRODUCT).shouldHave(text(expNameProduct));
+        $(CLASS_PRICE_PRODUCT).shouldHave(text(expPriceProduct));
+        $x(XPATH_PRICE_TOTAL).shouldHave(text(expPriceProduct));
+        $(CSS_ORDER_BUTTON).shouldBe(enabled);
     }
 
 
