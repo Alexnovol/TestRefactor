@@ -44,10 +44,10 @@ public class GuiTest {
 
         CatalogPage catalogPage = mainPage.findProduct("Iphone 13");
 
-        catalogPage.checkSearchResults("По запросу Iphone 13 найдено", "iphone 13",
-                "По популярности", "Apple");
-
-        catalogPage.clearSearchField();
+        catalogPage
+                .checkSearchResults("По запросу Iphone 13 найдено", "iphone 13",
+                "По популярности", "Apple")
+                .clearSearchField();
 
         mainPage.getSearchField().shouldHave(value(""));
 
@@ -57,26 +57,22 @@ public class GuiTest {
     @DisplayName("Смена города")
     public void changeCity() {
 
+        String city = "Санкт-Петербург";
+
         open(LINK);
 
         mainPage.waitingLoadFirstProduct();
 
-        GeoPage geoPage = mainPage.clickButtonChangeCity();
-
-        String city = "Санкт-Петербург";
-
-        geoPage.enterCity(city);
-
-        geoPage.waitingLoadAnyDeliveryPoint(city);
+        GeoPage geoPage = mainPage.clickButtonChangeCity()
+                .enterCity(city)
+                .waitingLoadAnyDeliveryPoint(city);
 
         String firstAddress = geoPage.getFirstAddress();
 
-        geoPage.clickFirstAddress();
-
-        geoPage.checkInfoDeliveryPoint(visible);
-        geoPage.checkAddressDeliveryPoint(firstAddress);
-
-        geoPage.clickButtonSelectDeliveryPoint();
+        geoPage.clickFirstAddress()
+                .checkInfoDeliveryPoint(visible)
+                .checkAddressDeliveryPoint(firstAddress)
+                .clickButtonSelectDeliveryPoint();
 
         geoPage.checkInfoDeliveryPoint(disappear);
         mainPage.getButtonChangeCity().shouldHave(text(firstAddress));
@@ -86,34 +82,31 @@ public class GuiTest {
     @DisplayName("Добавление товара в корзину")
     public void addProductBasket() {
 
+        List<String> expectedFilters = Arrays.asList("Главная", "Бытовая техника", "Техника для дома",
+                "Пылесосы и пароочистители", "Роботы-пылесосы");
+
         open(LINK);
 
         mainPage.waitingLoadFirstProduct();
 
-        mainPage.clickButtonFilters();
+        CatalogPage catalogPage = mainPage
+                .clickButtonFilters()
+                .hoverToHouseAppliances()
+                .clickAppliancesForHouse()
+                .clickHooversAndSteamCleaners()
+                .clickRobotHoovers();
 
-        mainPage.hoverToHouseAppliances();
-
-        mainPage.clickAppliancesForHouse();
-
-        mainPage.clickHooversAndSteamCleaners();
-
-        CatalogPage catalogPage = mainPage.clickRobotHoovers();
-
-        List<String> expectedFilters = Arrays.asList("Главная", "Бытовая техника", "Техника для дома",
-                "Пылесосы и пароочистители", "Роботы-пылесосы");
-        catalogPage.checkCatalogTitleAndFilters("Роботы-пылесосы", expectedFilters);
+        catalogPage
+                .checkCatalogTitleAndFilters("Роботы-пылесосы", expectedFilters)
+                .clickButtonInBasket()
+                .checkCountProductsBasket("1");
 
         String firstProductName = catalogPage.getNameFirstProduct();
         String firstProductPrice = catalogPage.getPriceFirstProduct();
 
-        catalogPage.clickButtonInBasket();
+       BasketPage basketPage = catalogPage.clickButtonBasket();
 
-        catalogPage.checkCountProductsBasket("1");
-
-        BasketPage basketPage = catalogPage.clickButtonBasket();
-
-        basketPage.checkDataInBasket(firstProductName, firstProductPrice);
+       basketPage.checkDataInBasket(firstProductName, firstProductPrice);
 
     }
 
@@ -121,37 +114,36 @@ public class GuiTest {
     @DisplayName("Работа с фильтрами")
     public void checkFilters() {
 
+        String priceFrom = "100 000";
+        String priceTo = "149 000";
+
         open(LINK);
 
         mainPage.waitingLoadFirstProduct();
 
-        mainPage.clickButtonFilters();
+        CatalogPage catalogPage = mainPage
+                .clickButtonFilters()
+                .hoverToElectronics()
+                .clickLaptopsAndComputers()
+                .clickLaptops();
 
-        mainPage.hoverToElectronics();
+        catalogPage
+                .clickButtonAllFilters()
+                .enterPrice(priceFrom, priceTo);
 
-        mainPage.clickLaptopsAndComputers();
-
-        CatalogPage catalogPage = mainPage.clickLaptops();
-
-        catalogPage.clickButtonAllFilters();
-
-        String priceFrom = "100 000";
-        String priceTo = "149 000";
-        catalogPage.enterPrice(priceFrom, priceTo);
         String brandText = catalogPage.getFilterBrandText();
         String diagonalText = catalogPage.getFilterDiagonalText();
-        catalogPage.clickFilterBrandAndDiagonal();
 
-        String countGoodsInFilters = catalogPage.getCountFilteredGoodsInFilters();
+        String countGoodsInFilters = catalogPage
+                .clickFilterBrandAndDiagonal()
+                .getCountFilteredGoodsInFilters();
 
-        catalogPage.clickButtonShowing();
+        catalogPage
+                .clickButtonShowing()
+                .checkSelectedFiltersAndButtonReset(brandText, diagonalText, priceFrom, priceTo);
 
         shouldBeEquals(countGoodsInFilters, catalogPage.getCountFilteredGoodsOnPage());
-        catalogPage.checkSelectedFiltersAndButtonReset(brandText, diagonalText, priceFrom, priceTo);
 
     }
-
-
-
 
 }

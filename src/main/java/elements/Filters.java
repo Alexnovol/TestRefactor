@@ -2,6 +2,8 @@ package elements;
 
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import pages.CatalogPage;
+
 import static com.codeborne.selenide.Selenide.*;
 
 public class Filters {
@@ -22,7 +24,7 @@ public class Filters {
 
     private final static String CSS_BUTTON_SHOWING = ".filters-desktop__btn-main.btn-main";
 
-    public void enterPrice(String priceFrom, String priceTo) {
+    public CatalogPage enterPrice(String priceFrom, String priceTo) {
         SelenideElement elemPriceFrom = $x(XPATH_PRICE_FROM);
         elemPriceFrom.clear();
         elemPriceFrom.setValue(priceFrom);
@@ -30,6 +32,8 @@ public class Filters {
         SelenideElement elemPriceTo = $x(XPATH_PRICE_TO);
         elemPriceTo.clear();
         elemPriceTo.setValue(priceTo);
+
+        return new CatalogPage();
     }
 
     public String getBrandText() {
@@ -46,10 +50,12 @@ public class Filters {
 
     }
 
-    public void clickFilterBrandAndDiagonal() {
+    public CatalogPage clickFilterBrandAndDiagonal() {
         $x(XPATH_BRAND).click();
         $x(XPATH_DIAGONAL).click();
         Selenide.sleep(2000);
+
+        return new CatalogPage();
     }
 
     public String getCountFilteredGoods() {
@@ -58,7 +64,9 @@ public class Filters {
 
     }
 
-    public void clickButtonShowing() {
+    public CatalogPage clickButtonShowing() {
         $(CSS_BUTTON_SHOWING).click();
+
+        return new CatalogPage();
     }
 }

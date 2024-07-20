@@ -53,17 +53,21 @@ public class CatalogPage {
 
     private Filters filters = new Filters();
 
-    public void clearSearchField() {
+    public CatalogPage clearSearchField() {
         $(CSS_BUTTON_CLEAR_SEARCH_FIELD).click();
+
+        return this;
     }
 
-    public void checkCatalogTitleAndFilters(String expCatalogTitle, List<String> expFilters) {
+    public CatalogPage checkCatalogTitleAndFilters(String expCatalogTitle, List<String> expFilters) {
         SelenideElement catalogTitle = $(CLASS_CATALOG_TITLE);
         catalogTitle.shouldHave(text(expCatalogTitle));
 
         List<String> filters = new ArrayList<>();
         $$(CLASS_FILTERS_ON_PAGE).stream().forEach(filter -> filters.add(filter.$("span").text()));
         shouldBeEquals(expFilters, filters);
+
+        return this;
     }
 
     public String getNameFirstProduct() {
@@ -77,12 +81,17 @@ public class CatalogPage {
         return $x(XPATH_PRICE_FIRST_PRODUCT).text();
     }
 
-    public void clickButtonInBasket() {
+    public CatalogPage clickButtonInBasket() {
         $x(XPATH_IN_BASKET_BUTTON_FIRST_PRODUCT).scrollTo().click();
+
+        return this;
+
     }
 
-    public void checkCountProductsBasket(String expCount) {
+    public CatalogPage checkCountProductsBasket(String expCount) {
         $(CLASS_COUNT_PRODUCTS_BASKET).shouldHave(text(expCount));
+
+        return this;
     }
 
     public BasketPage clickButtonBasket() {
@@ -92,8 +101,10 @@ public class CatalogPage {
         return new BasketPage();
     }
 
-    public void clickButtonAllFilters() {
+    public CatalogPage clickButtonAllFilters() {
         $(CSS_BUTTON_ALL_FILTERS).click();
+
+        return this;
     }
 
     public String getCountFilteredGoodsOnPage() {
@@ -102,15 +113,17 @@ public class CatalogPage {
 
     }
 
-    public void checkSelectedFiltersAndButtonReset(String expBrand, String expDiagonal, String expPriceFrom, String expPriceTo) {
+    public CatalogPage checkSelectedFiltersAndButtonReset(String expBrand, String expDiagonal, String expPriceFrom, String expPriceTo) {
         $x(XPATH_SELECTED_FILTER_BRAND).shouldHave(text(expBrand));
         $x(XPATH_SELECTED_FILTER_DIAGONAL).shouldHave(text(expDiagonal));
         $x(XPATH_SELECTED_FILTER_PRICE).shouldHave(text(String.format("от %s до %s", expPriceFrom, expPriceTo)));
         $x(XPATH_BUTTON_RESET).shouldBe(enabled);
+
+        return this;
     }
 
-    public void enterPrice(String priceFrom, String priceTo) {
-        filters.enterPrice(priceFrom, priceTo);
+    public CatalogPage enterPrice(String priceFrom, String priceTo) {
+        return filters.enterPrice(priceFrom, priceTo);
     }
 
     public String getFilterBrandText() {
@@ -125,8 +138,8 @@ public class CatalogPage {
 
     }
 
-    public void clickFilterBrandAndDiagonal() {
-        filters.clickFilterBrandAndDiagonal();
+    public CatalogPage clickFilterBrandAndDiagonal() {
+        return filters.clickFilterBrandAndDiagonal();
     }
 
     public String getCountFilteredGoodsInFilters() {
@@ -135,15 +148,17 @@ public class CatalogPage {
 
     }
 
-    public void clickButtonShowing() {
-        filters.clickButtonShowing();
+    public CatalogPage clickButtonShowing() {
+        return filters.clickButtonShowing();
     }
 
-    public void checkSearchResults(String expTitleRes, String expFirstFilter, String expSecondFilter, String expBrandFirstProduct) {
+    public CatalogPage checkSearchResults(String expTitleRes, String expFirstFilter, String expSecondFilter, String expBrandFirstProduct) {
         $(CLASS_TITLE_RESULTS).shouldHave(text(expTitleRes));
         $x(XPATH_FIRST_FILTER).shouldHave(text(expFirstFilter));
         $x(XPATH_SECOND_FILTER).shouldHave(text(expSecondFilter));
         $x(XPATH_BRAND_FIRST_PRODUCT).shouldHave(text(expBrandFirstProduct));
+
+        return this;
     }
 
 }

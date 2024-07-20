@@ -19,9 +19,11 @@ public class MainPage {
 
     private CategoryMenu categoryMenu = new CategoryMenu();
 
-    public void waitingLoadFirstProduct() {
+    public MainPage waitingLoadFirstProduct() {
 
         $x(XPATH_FIRST_PRODUCT).shouldBe(enabled);
+
+        return this;
 
     }
 
@@ -54,36 +56,40 @@ public class MainPage {
         return new GeoPage();
     }
 
-    public void clickButtonFilters() {
+    public MainPage clickButtonFilters() {
 
         $(CSS_BUTTON_FILTERS).click();
 
         $(CSS_CATEGORY_MENU).hover();
 
+        return this;
+
     }
 
-    public void hoverToHouseAppliances() {
-        categoryMenu.hoverToHouseAppliances();
+    public MainPage hoverToHouseAppliances() {
+        return categoryMenu.hoverToHouseAppliances();
     }
 
-    public void clickAppliancesForHouse() {
+    public MainPage clickAppliancesForHouse() {
         categoryMenu.clickAppliancesForHouse();
+
+        return this;
     }
 
-    public void clickHooversAndSteamCleaners() {
-        categoryMenu.clickHooversAndSteamCleaners();
+    public MainPage clickHooversAndSteamCleaners() {
+        return categoryMenu.clickHooversAndSteamCleaners();
     }
 
     public CatalogPage clickRobotHoovers() {
         return categoryMenu.clickRobotHoovers();
     }
 
-    public void hoverToElectronics() {
-        categoryMenu.hoverToElectronics();
+    public MainPage hoverToElectronics() {
+        return categoryMenu.hoverToElectronics();
     }
 
-    public void clickLaptopsAndComputers() {
-        categoryMenu.clickLaptopsAndComputers();
+    public MainPage clickLaptopsAndComputers() {
+        return categoryMenu.clickLaptopsAndComputers();
     }
 
     public CatalogPage clickLaptops() {

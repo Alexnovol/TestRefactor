@@ -24,18 +24,22 @@ public class GeoPage {
 
     private final static String CLASS_ADDRESS_DELIVERY_POINT = ".details-self__name-text";
 
-    public void enterCity(String city) {
+    public GeoPage enterCity(String city) {
 
         SelenideElement searchField = $x(XPATH_ADDRESS_ENTRY);
         searchField.click();
         searchField.setValue(city);
         $x(XPATH_BUTTON_FIND).click();
 
+        return this;
+
     }
 
-    public void waitingLoadAnyDeliveryPoint(String city) {
+    public GeoPage waitingLoadAnyDeliveryPoint(String city) {
 
         $x(XPATH_ANY_DELIVERY_POINT.replace("city", city)).shouldBe(visible);
+
+        return this;
 
     }
 
@@ -45,23 +49,31 @@ public class GeoPage {
 
     }
 
-    public void clickFirstAddress() {
+    public GeoPage clickFirstAddress() {
 
         $x(XPATH_FIRST_DELIVERY_POINT).click();
 
+        return this;
+
     }
 
-    public void clickButtonSelectDeliveryPoint() {
+    public MainPage clickButtonSelectDeliveryPoint() {
 
         $(CSS_BUTTON_SELECT_DELIVERY_POINT).click();
 
+        return new MainPage();
+
     }
 
-    public void checkInfoDeliveryPoint(WebElementCondition condition) {
+    public GeoPage checkInfoDeliveryPoint(WebElementCondition condition) {
         $(CLASS_INFO_DELIVERY_POINT).shouldBe(condition);
+
+        return this;
     }
 
-    public void checkAddressDeliveryPoint(String expAddress) {
+    public GeoPage checkAddressDeliveryPoint(String expAddress) {
         $(CLASS_ADDRESS_DELIVERY_POINT).shouldHave(text(expAddress));
+
+        return this;
     }
 }

@@ -13,12 +13,14 @@ public class BasketPage {
 
     public final static String CSS_ORDER_BUTTON = ".b-btn-do-order.btn-main.j-btn-confirm-order";
 
-    public void checkDataInBasket(String expNameProduct, String expPriceProduct) {
+    public BasketPage checkDataInBasket(String expNameProduct, String expPriceProduct) {
 
         $(CLASS_NAME_PRODUCT).shouldHave(text(expNameProduct));
         $(CLASS_PRICE_PRODUCT).shouldHave(text(expPriceProduct));
         $x(XPATH_PRICE_TOTAL).shouldHave(text(expPriceProduct));
         $(CSS_ORDER_BUTTON).shouldBe(enabled);
+
+        return this;
     }
 
 
